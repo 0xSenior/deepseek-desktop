@@ -4,8 +4,168 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DeepSeek Desktop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0b0d14;
+      color: #f3f4f6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Ambient Background Glows */
+    .bg-glow-1 {
+      position: absolute;
+      top: -10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(79, 110, 247, 0.25) 0%, rgba(11, 13, 20, 0) 70%);
+      pointer-events: none;
+      filter: blur(40px);
+    }
+
+    .bg-glow-2 {
+      position: absolute;
+      bottom: -15%;
+      right: 15%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(11, 13, 20, 0) 70%);
+      pointer-events: none;
+      filter: blur(50px);
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(19, 24, 38, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 48px 40px;
+      text-align: center;
+      max-width: 440px;
+      width: 90%;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    }
+
+    .card:hover {
+      /* transform: translateY(-4px); */
+      border-color: rgba(79, 110, 247, 0.3);
+    }
+
+    .logo-badge {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 24px;
+      background: linear-gradient(135deg, rgba(79, 110, 247, 0.2), rgba(56, 189, 248, 0.1));
+      border: 1px solid rgba(79, 110, 247, 0.3);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(79, 110, 247, 0.15);
+    }
+
+    .logo-badge img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+
+    .title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+
+    .creator-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #4f6ef7 0%, #38bdf8 100%);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 14px 28px;
+      border-radius: 14px;
+      width: 100%;
+      box-shadow: 0 10px 25px rgba(79, 110, 247, 0.35);
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .creator-link:hover {
+      /* transform: translateY(-2px); */
+      box-shadow: 0 14px 30px rgba(79, 110, 247, 0.5);
+      filter: brightness(1.08);
+    }
+
+    .creator-link svg {
+      width: 18px;
+      height: 18px;
+      transition: transform 0.25s ease;
+    }
+
+    .creator-link:hover svg {
+      transform: translateX(4px);
+    }
+
+    .footer-tag {
+      margin-top: 24px;
+      font-size: 12px;
+      color: #64748b;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+  </style>
 </head>
 <body>
-  <h1>made by doxdk</h1>
+  <div class="bg-glow-1"></div>
+  <div class="bg-glow-2"></div>
+
+  <div class="card">
+    <div class="logo-badge">
+      <img src="deepseek-logo.png" alt="DeepSeek Logo">
+    </div>
+    <h1 class="title">DeepSeek Desktop</h1>
+    <p class="subtitle">Experience AI seamlessly on your desktop environment.</p>
+
+    <a href="https://senior-flax.vercel.app/" class="creator-link" target="_blank" rel="noopener noreferrer">
+      <span>Made by Senior A.</span>
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+      </svg>
+    </a>
+  </div>
 </body>
 </html>

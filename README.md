@@ -90,4 +90,4 @@ I created **DeepSeek Desktop** because I believe that AI tools like DeepSeek hav
 
 ---
 
-Made with ❤️ by **doxdk & La Cantera Studios**.
+Made with ❤️ by **Senior A.**.
