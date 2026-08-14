@@ -6,6 +6,7 @@ let tray = null;
 let authWindowInstance = null;
 
 const CHROME_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36';
+const FIREFOX_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0';
 
 function isAuthUrl(url) {
     if (!url) return false;
@@ -40,40 +41,8 @@ function openAuthPopupWindow(authUrl) {
             nodeIntegration: false,
             contextIsolation: true,
             session: session.defaultSession,
-            userAgent: CHROME_USER_AGENT,
+            userAgent: FIREFOX_USER_AGENT,
         }
-    });
-
-    authWindowInstance.webContents.on('dom-ready', () => {
-        authWindowInstance.webContents.executeJavaScript(`
-            try {
-                Object.defineProperty(navigator, 'userAgentData', {
-                    get: () => ({
-                        brands: [
-                            { brand: 'Google Chrome', version: '132' },
-                            { brand: 'Chromium', version: '132' },
-                            { brand: 'Not_A Brand', version: '24' }
-                        ],
-                        mobile: false,
-                        platform: 'Windows',
-                        getHighEntropyValues: () => Promise.resolve({
-                            architecture: 'x86',
-                            bitness: '64',
-                            brands: [
-                                { brand: 'Google Chrome', version: '132' },
-                                { brand: 'Chromium', version: '132' },
-                                { brand: 'Not_A Brand', version: '24' }
-                            ],
-                            mobile: false,
-                            model: '',
-                            platform: 'Windows',
-                            platformVersion: '15.0.0',
-                            uaFullVersion: '132.0.0.0'
-                        })
-                    })
-                });
-            } catch (e) {}
-        `).catch(() => {});
     });
 
     authWindowInstance.loadURL(authUrl);
@@ -368,10 +337,10 @@ function createMainWindow() {
         }
     });
 
-    // Handle OAuth popup windows via system default browser (Google OAuth Security Compliance)
+    // Handle OAuth popup windows via managed auth popup with Firefox User-Agent
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
         if (isAuthUrl(url)) {
-            shell.openExternal(url);
+            openAuthPopupWindow(url);
             return { action: 'deny' };
         }
 
@@ -385,7 +354,7 @@ function createMainWindow() {
     mainWindow.webContents.on('will-navigate', (event, url) => {
         if (isAuthUrl(url)) {
             event.preventDefault();
-            shell.openExternal(url);
+            openAuthPopupWindow(url);
             return;
         }
 
@@ -398,7 +367,7 @@ function createMainWindow() {
     mainWindow.webContents.on('will-redirect', (event, url) => {
         if (isAuthUrl(url)) {
             event.preventDefault();
-            shell.openExternal(url);
+            openAuthPopupWindow(url);
         }
     });
 
@@ -429,10 +398,10 @@ app.on('ready', () => {
     session.defaultSession.webRequest.onBeforeSendHeaders(
         { urls: ['https://accounts.google.com/*', 'https://*.google.com/*'] },
         (details, callback) => {
-            details.requestHeaders['User-Agent'] = CHROME_USER_AGENT;
-            details.requestHeaders['Sec-CH-UA'] = '"Google Chrome";v="132", "Chromium";v="132", "Not_A Brand";v="24"';
-            details.requestHeaders['Sec-CH-UA-Mobile'] = '?0';
-            details.requestHeaders['Sec-CH-UA-Platform'] = '"Windows"';
+            details.requestHeaders['User-Agent'] = FIREFOX_USER_AGENT;
+            delete details.requestHeaders['Sec-CH-UA'];
+            delete details.requestHeaders['Sec-CH-UA-Mobile'];
+            delete details.requestHeaders['Sec-CH-UA-Platform'];
             callback({ cancel: false, requestHeaders: details.requestHeaders });
         }
     );
