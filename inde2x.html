@@ -155,11 +155,11 @@
             box-sizing: border-box;
         }
 
-        h2 i {
-            color: #f87171;
-            font-size: 1.4rem;
+        h2 .icon-box {
             width: 46px;
             height: 46px;
+            min-width: 46px;
+            min-height: 46px;
             background: #141d2b;
             border-radius: 14px;
             display: inline-flex;
@@ -168,16 +168,31 @@
             border: 1px solid #1e2a3a;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             flex-shrink: 0;
-            line-height: 1;
-            overflow: hidden;
             box-sizing: border-box;
-            vertical-align: middle;
+            overflow: hidden;
         }
 
+        h2 .icon-box i,
+        h2 i {
+            color: #f87171;
+            font-size: 1.4rem;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h2 .icon-box i::before,
         h2 i::before {
-            display: block;
+            display: inline-block;
             line-height: 1;
             margin: 0 auto;
+            vertical-align: middle;
         }
 
         h3 {
@@ -924,7 +939,7 @@
         <!-- ============================================================ -->
         <!-- 1. BACKGROUND -->
         <!-- ============================================================ -->
-        <h2><i class="fas fa-bullseye"></i> Background &amp; Significance</h2>
+        <h2><span class="icon-box"><i class="fas fa-bullseye"></i></span> Background &amp; Significance</h2>
         <p style="font-size:1.05rem; margin-bottom:10px; color:#e8edf5;">
             Given the security challenges Egypt faces in countering terrorism, it has become essential to leverage
             <strong style="color:#f1f6fa;">Data Science and Artificial Intelligence</strong> tools to analyze and understand
@@ -958,7 +973,7 @@
         <!-- ============================================================ -->
         <!-- 2. OBJECTIVES -->
         <!-- ============================================================ -->
-        <h2><i class="fas fa-flag-checkered"></i> Project Objectives</h2>
+        <h2><span class="icon-box"><i class="fas fa-flag-checkered"></i></span> Project Objectives</h2>
         <div class="table-wrap">
             <table>
                 <thead>
@@ -977,7 +992,7 @@
         <!-- ============================================================ -->
         <!-- 3. DATA SOURCES -->
         <!-- ============================================================ -->
-        <h2><i class="fas fa-database"></i> Data Sources</h2>
+        <h2><span class="icon-box"><i class="fas fa-database"></i></span> Data Sources</h2>
         <div class="card-grid">
             <div class="card">
                 <div class="icon-circle"><i class="fas fa-globe"></i></div>
@@ -997,7 +1012,7 @@
         <!-- ============================================================ -->
         <!-- 4. TOOLS & TECHNOLOGIES — COMPLETELY FIXED -->
         <!-- ============================================================ -->
-        <h2><i class="fas fa-tools"></i> Tools &amp; Technologies</h2>
+        <h2><span class="icon-box"><i class="fas fa-tools"></i></span> Tools &amp; Technologies</h2>
         <div class="tech-stack">
             <span class="tech-item"><i class="fab fa-python"></i><span>Python</span></span>
             <span class="tech-item"><i class="fas fa-table"></i><span>Pandas / NumPy</span></span>
@@ -1012,7 +1027,7 @@
         <!-- ============================================================ -->
         <!-- 5. WORKFLOW -->
         <!-- ============================================================ -->
-        <h2><i class="fas fa-diagram-project"></i> Proposed Workflow</h2>
+        <h2><span class="icon-box"><i class="fas fa-diagram-project"></i></span> Proposed Workflow</h2>
 
         <!-- Mermaid placeholder -->
         <div class="mermaid-box">
