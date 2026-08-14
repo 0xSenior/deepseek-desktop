@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Proposal - DEPI | Terrorism Analysis in Egypt</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        /* ==============================================================
+               DARK THEME — RESET & BASE
+            ============================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #080b12;
+            color: #e8edf5;
+            padding: 40px 20px;
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #141b26;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f87171;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ef4444;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            background: #0f1622;
+            border-radius: 40px;
+            padding: 55px 60px;
+            border: 1px solid #1e2a3a;
+            box-shadow:
+                0 30px 80px -20px rgba(0, 0, 0, 0.9),
+                0 0 0 1px rgba(248, 113, 113, 0.06) inset,
+                0 0 40px rgba(248, 113, 113, 0.03);
+            position: relative;
+            transition: box-shadow 0.4s ease;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 30%;
+            right: 30%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #f87171, #ef4444, #f87171, transparent);
+            border-radius: 0 0 50% 50%;
+            opacity: 0.6;
+        }
+
+        .container:hover {
+            box-shadow:
+                0 40px 100px -20px rgba(248, 113, 113, 0.15),
+                0 0 0 1px rgba(248, 113, 113, 0.12) inset,
+                0 0 60px rgba(248, 113, 113, 0.05);
+        }
+
+        /* ==============================================================
+               TYPOGRAPHY
+            ============================================================== */
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #f1f6fa;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        h1 i {
+            color: #f87171;
+            font-size: 2.8rem;
+            filter: drop-shadow(0 0 12px rgba(248, 113, 113, 0.3));
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: #94a3b8;
+            margin-bottom: 45px;
+            border-left: 5px solid #f87171;
+            padding-left: 24px;
+            background: #141d2b;
+            padding: 16px 28px;
+            border-radius: 16px;
+            border: 1px solid #1e2a3a;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .subtitle i {
+            color: #f87171;
+            margin-right: 10px;
+        }
+
+        .subtitle .date-badge {
+            display: inline-block;
+            background: #1e2a3a;
+            padding: 4px 18px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            border: 1px solid #2a3a50;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #f1f6fa;
+            margin-top: 50px;
+            margin-bottom: 22px;
+            padding-bottom: 14px;
+            border-bottom: 3px solid #1e2a3a;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        i.fas, i.far, i.fab, i.fa {
+            line-height: 1;
+            box-sizing: border-box;
+        }
+
+        h2 i {
+            color: #f87171;
+            font-size: 1.4rem;
+            width: 46px;
+            height: 46px;
+            background: #141d2b;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #1e2a3a;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+            line-height: 1;
+            overflow: hidden;
+            box-sizing: border-box;
+            vertical-align: middle;
+        }
+
+        h2 i::before {
+            display: block;
+            line-height: 1;
+            margin: 0 auto;
+        }
+
+        h3 {
+            font-size: 1.35rem;
+            color: #e8edf5;
+            margin-top: 28px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        h3 i {
+            color: #f87171;
+            font-size: 1.2rem;
+            width: 34px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* ==============================================================
+               CARDS
+            ============================================================== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin: 25px 0;
+        }
+
+        .card {
+            background: #141d2b;
+            padding: 26px 22px;
+            border-radius: 22px;
+            border: 1px solid #1e2a3a;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow:
+                0 8px 30px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(248, 113, 113, 0.03) inset;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(248, 113, 113, 0.03), transparent 60%);
+            pointer-events: none;
+        }
+
+        .card:hover {
+            border-color: #f87171;
+            transform: translateY(-6px);
+            box-shadow:
+                0 20px 50px -10px rgba(248, 113, 113, 0.2),
+                0 0 0 1px rgba(248, 113, 113, 0.15) inset,
+                0 0 40px rgba(248, 113, 113, 0.04);
+        }
+
+        .card .icon-circle {
+            width: 56px;
+            height: 56px;
+            min-width: 56px;
+            min-height: 56px;
+            background: #1a2538;
+            border: 1px solid #2a3a50;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: #f87171;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .card .icon-circle i {
+            font-size: 1.6rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card:hover .icon-circle {
+            background: #1e2a3a;
+            border-color: #f87171;
+            box-shadow: 0 4px 30px rgba(248, 113, 113, 0.2);
+            transform: scale(1.05);
+        }
+
+        .card h4 {
+            font-size: 1.15rem;
+            color: #f1f6fa;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ==============================================================
+               TABLES
+            ============================================================== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 20px 0 30px;
+            border-radius: 20px;
+            border: 1px solid #1e2a3a;
+            box-shadow: 0 8px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            min-width: 580px;
+        }
+
+        thead {
+            background: #141d2b;
+        }
+
+        th {
+            text-align: left;
+            padding: 16px 22px;
+            font-weight: 700;
+            color: #f1f6fa;
+            border-bottom: 2px solid #1e2a3a;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 14px 22px;
+            border-bottom: 1px solid #1a2538;
+            vertical-align: middle;
+            color: #e8edf5;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #141d2b;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #1e2a3a;
+            color: #f87171;
+            font-weight: 700;
+            font-size: 0.75rem;
+            padding: 2px 16px;
+            border-radius: 40px;
+            border: 1px solid #f87171;
+            box-shadow: 0 2px 10px rgba(248, 113, 113, 0.1);
+        }
+
+        /* ==============================================================
+               MERMAID PLACEHOLDER
+            ============================================================== */
+        .mermaid-box {
+            background: #141d2b;
+            border: 2px dashed #1e2a3a;
+            border-radius: 24px;
+            padding: 35px 20px;
+            margin: 25px 0;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .mermaid-box:hover {
+            border-color: #f87171;
+            background: #111a28;
+            box-shadow: 0 8px 45px rgba(248, 113, 113, 0.08);
+        }
+
+        .mermaid-box .mermaid-icon {
+            font-size: 2.6rem;
+            color: #94a3b8;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .mermaid-box code {
+            background: #0b0e14;
+            color: #e8edf5;
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-top: 6px;
+            border: 1px solid #1e2a3a;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .mermaid-box .hint {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 10px;
+        }
+
+        .mermaid-box .hint strong {
+            color: #94a3b8;
+        }
+
+        /* ==============================================================
+               TECH STACK — COMPLETELY FIXED
+            ============================================================== */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0 25px;
+            padding: 4px 0;
+        }
+
+        .tech-item {
+            background: #141d2b;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #1e2a3a;
+            color: #e8edf5;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.25s ease;
+            line-height: 1.3;
+            white-space: nowrap;
+        }
+
+        .tech-item i {
+            color: #f87171;
+            font-size: 1rem;
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .tech-item span {
+            display: inline-block;
+            line-height: 1.3;
+        }
+
+        .tech-item:hover {
+            border-color: #f87171;
+            box-shadow: 0 4px 25px rgba(248, 113, 113, 0.12);
+            transform: translateY(-2px);
+        }
+
+        /* ==============================================================
+               WORKFLOW SUMMARY — FIXED
+            ============================================================== */
+        .workflow-summary {
+            background: #141d2b;
+            padding: 18px 24px;
+            border-radius: 20px;
+            border: 1px solid #1e2a3a;
+            margin: 16px 0;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .workflow-summary p {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 18px;
+            font-weight: 500;
+            color: #e8edf5;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .workflow-summary p span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 0;
+        }
+
+        .workflow-summary i {
+            color: #f87171;
+            font-size: 0.85rem;
+            width: 16px;
+            text-align: center;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ==============================================================
+               LISTS — FIXED
+            ============================================================== */
+        .icon-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .icon-list li {
+            padding: 10px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            border-bottom: 1px solid #141d2b;
+            color: #e8edf5;
+            transition: 0.2s;
+        }
+
+        .icon-list li:last-child {
+            border-bottom: none;
+        }
+
+        .icon-list li:hover {
+            padding-left: 6px;
+        }
+
+        .icon-list i {
+            color: #f87171;
+            font-size: 1.1rem;
+            width: 24px;
+            min-width: 24px;
+            text-align: center;
+            margin-top: 2px;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ==============================================================
+               TIMELINE
+            ============================================================== */
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            background: #141d2b;
+            border-radius: 18px;
+            padding: 18px 20px;
+            border-left: 5px solid #f87171;
+            border: 1px solid #1e2a3a;
+            border-left-width: 5px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            border-color: #f87171;
+            box-shadow: 0 8px 35px rgba(248, 113, 113, 0.08);
+            transform: translateY(-3px);
+        }
+
+        .timeline-item strong {
+            display: block;
+            font-size: 0.85rem;
+            color: #f87171;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+
+        .timeline-item span {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        /* ==============================================================
+               DIVIDER
+            ============================================================== */
+        hr {
+            border: none;
+            border-top: 2px solid #1e2a3a;
+            margin: 45px 0 20px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ==============================================================
+               FOOTER
+            ============================================================== */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .footer .social-icons {
+            display: flex;
+            gap: 14px;
+        }
+
+        .footer .social-icons i {
+            font-size: 1.4rem;
+            color: #64748b;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .footer .social-icons i:hover {
+            color: #f87171;
+            transform: translateY(-2px);
+            filter: drop-shadow(0 4px 12px rgba(248, 113, 113, 0.3));
+        }
+
+        /* ==============================================================
+               RESPONSIVE
+            ============================================================== */
+        @media (max-width: 992px) {
+            .container {
+                padding: 35px 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px 18px;
+                border-radius: 28px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .subtitle {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .tech-item {
+                font-size: 0.78rem;
+                padding: 6px 14px;
+                gap: 6px;
+            }
+
+            .tech-item i {
+                font-size: 0.85rem;
+                width: 16px;
+                height: 16px;
+            }
+
+            .workflow-summary {
+                padding: 14px 16px;
+            }
+
+            .workflow-summary p {
+                font-size: 0.8rem;
+                gap: 4px 12px;
+            }
+
+            .workflow-summary i {
+                font-size: 0.75rem;
+                width: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .timeline-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 16px 12px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            h1 i {
+                font-size: 1.6rem;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+                padding: 10px 14px;
+            }
+
+            .tech-stack {
+                gap: 6px;
+            }
+
+            .tech-item {
+                font-size: 0.7rem;
+                padding: 4px 10px;
+                gap: 4px;
+            }
+
+            .tech-item i {
+                font-size: 0.75rem;
+                width: 14px;
+                height: 14px;
+            }
+
+            .workflow-summary {
+                padding: 10px 12px;
+            }
+
+            .workflow-summary p {
+                font-size: 0.7rem;
+                gap: 2px 8px;
+            }
+
+            .workflow-summary i {
+                font-size: 0.65rem;
+                width: 12px;
+            }
+
+            .icon-list li {
+                font-size: 0.9rem;
+                padding: 8px 0;
+            }
+
+            .icon-list i {
+                font-size: 0.95rem;
+                width: 20px;
+                min-width: 20px;
+            }
+
+            .table-wrap table {
+                font-size: 0.8rem;
+                min-width: 400px;
+            }
+
+            th,
+            td {
+                padding: 10px 14px;
+            }
+        }
+
+        /* ==============================================================
+               PRINT STYLES
+            ============================================================== */
+        @media print {
+            body {
+                background: white !important;
+                padding: 10px !important;
+            }
+            .container {
+                box-shadow: none !important;
+                padding: 25px !important;
+                border: 1px solid #ccc !important;
+                background: white !important;
+            }
+            .container::before {
+                display: none !important;
+            }
+            .container:hover {
+                box-shadow: none !important;
+            }
+            h1,
+            h2,
+            h3,
+            h4,
+            .subtitle,
+            .card h4,
+            .card p,
+            td,
+            .icon-list li,
+            .workflow-summary p {
+                color: #1e293b !important;
+            }
+            .card {
+                background: #f8fafc !important;
+                border-color: #e2e8f0 !important;
+                box-shadow: none !important;
+            }
+            .card .icon-circle {
+                background: #f1f5f9 !important;
+                border-color: #e2e8f0 !important;
+            }
+            .badge {
+                background: #fef2f2 !important;
+                color: #b91c1c !important;
+            }
+            .mermaid-box {
+                background: #f8fafc !important;
+                border-color: #e2e8f0 !important;
+                box-shadow: none !important;
+            }
+            .mermaid-box code {
+                background: #f1f5f9 !important;
+                color: #1e293b !important;
+            }
+            .tech-item {
+                background: #f1f5f9 !important;
+                color: #1e293b !important;
+                border-color: #e2e8f0 !important;
+                box-shadow: none !important;
+            }
+            .tech-item i {
+                color: #dc2626 !important;
+            }
+            .timeline-item {
+                background: #f8fafc !important;
+                border-color: #e2e8f0 !important;
+                box-shadow: none !important;
+            }
+            .workflow-summary {
+                background: #f8fafc !important;
+                border-color: #e2e8f0 !important;
+                box-shadow: none !important;
+            }
+            .footer {
+                color: #64748b !important;
+            }
+            hr {
+                border-top-color: #e2e8f0 !important;
+            }
+            thead {
+                background: #f1f5f9 !important;
+            }
+            th {
+                color: #0f172a !important;
+            }
+            td {
+                color: #1e293b !important;
+            }
+            tr:hover td {
+                background: #f8fafc !important;
+            }
+            .table-wrap {
+                border-color: #e2e8f0 !important;
+                box-shadow: none !important;
+            }
+            .subtitle {
+                background: #f8fafc !important;
+                border-color: #dc2626 !important;
+                color: #475569 !important;
+            }
+            h1 i {
+                color: #dc2626 !important;
+            }
+            h2 i {
+                background: #f1f5f9 !important;
+                border-color: #e2e8f0 !important;
+                color: #dc2626 !important;
+            }
+            .icon-list i {
+                color: #dc2626 !important;
+            }
+            .footer .social-icons i {
+                color: #64748b !important;
+            }
+            .card::after {
+                display: none !important;
+            }
+            .card:hover {
+                transform: none !important;
+                box-shadow: none !important;
+            }
+            .timeline-item:hover {
+                transform: none !important;
+                box-shadow: none !important;
+            }
+            .tech-item:hover {
+                transform: none !important;
+                box-shadow: none !important;
+            }
+            .mermaid-box:hover {
+                box-shadow: none !important;
+            }
+            .container:hover {
+                box-shadow: none !important;
+            }
+            .workflow-summary i {
+                color: #dc2626 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- ============================================================ -->
+        <!-- HEADER -->
+        <!-- ============================================================ -->
+        <h1>
+            <i class="fas fa-shield-halved"></i>
+            Analyzing Terrorist Attack Patterns in Egypt
+        </h1>
+        <div class="subtitle">
+            <span>
+                <i class="fas fa-robot"></i>
+                Using Machine Learning &amp; Data Mining Techniques — Graduation Project Proposal
+            </span>
+            <span class="date-badge">
+                <i class="far fa-calendar-alt"></i> 2026
+            </span>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 1. BACKGROUND -->
+        <!-- ============================================================ -->
+        <h2><i class="fas fa-bullseye"></i> Background &amp; Significance</h2>
+        <p style="font-size:1.05rem; margin-bottom:10px; color:#e8edf5;">
+            Given the security challenges Egypt faces in countering terrorism, it has become essential to leverage
+            <strong style="color:#f1f6fa;">Data Science and Artificial Intelligence</strong> tools to analyze and understand
+            terrorist attack patterns. This project aims to transform historical terrorist attack data into
+            <strong style="color:#f1f6fa;">actionable strategic insights</strong>.
+        </p>
+
+        <div class="card-grid">
+            <div class="card">
+                <div class="icon-circle"><i class="fas fa-chart-line"></i></div>
+                <h4>Track Evolution</h4>
+                <p>Monitor how terrorist tactics and methods evolve over time.</p>
+            </div>
+            <div class="card">
+                <div class="icon-circle"><i class="fas fa-map-location-dot"></i></div>
+                <h4>Identify Hotspots</h4>
+                <p>Discover the most active geographical regions for attacks.</p>
+            </div>
+            <div class="card">
+                <div class="icon-circle"><i class="fas fa-link"></i></div>
+                <h4>Hidden Relationships</h4>
+                <p>Uncover connections between weapons, targets, regions, and outcomes.</p>
+            </div>
+            <div class="card">
+                <div class="icon-circle"><i class="fas fa-brain"></i></div>
+                <h4>Predictive Models</h4>
+                <p>Build AI models to support strategic planning and decision-making.</p>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 2. OBJECTIVES -->
+        <!-- ============================================================ -->
+        <h2><i class="fas fa-flag-checkered"></i> Project Objectives</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th style="width:12%;">#</th><th style="width:28%;">Objective</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><span class="badge">1</span></td><td><strong>Exploratory Data Analysis</strong></td><td>Study historical data and extract initial patterns and trends.</td></tr>
+                    <tr><td><span class="badge">2</span></td><td><strong>Association Rule Mining</strong></td><td>Discover rules like: "If attack type is Bombing, then target is most likely Police."</td></tr>
+                    <tr><td><span class="badge">3</span></td><td><strong>Classification Modeling</strong></td><td>Predict the terrorist group responsible for an attack.</td></tr>
+                    <tr><td><span class="badge">4</span></td><td><strong>Spatial Prediction</strong></td><td>Use LSTM networks to forecast future attack coordinates.</td></tr>
+                    <tr><td><span class="badge">5</span></td><td><strong>Interactive Dashboard</strong></td><td>Visualize results dynamically on a map of Egypt.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 3. DATA SOURCES -->
+        <!-- ============================================================ -->
+        <h2><i class="fas fa-database"></i> Data Sources</h2>
+        <div class="card-grid">
+            <div class="card">
+                <div class="icon-circle"><i class="fas fa-globe"></i></div>
+                <h4>Global Terrorism Database (GTD)</h4>
+                <p>The largest open-source database on terrorist attacks worldwide, containing over 200,000 documented incidents.</p>
+                <p style="margin-top:8px; font-size:0.85rem; color:#64748b;">
+                    <i class="fas fa-link"></i> start.umd.edu/gtd
+                </p>
+            </div>
+            <div class="card">
+                <div class="icon-circle"><i class="fas fa-map"></i></div>
+                <h4>Supplementary Data (Optional)</h4>
+                <p>Population census, weather, or terrain data to enrich spatial analysis.</p>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 4. TOOLS & TECHNOLOGIES — COMPLETELY FIXED -->
+        <!-- ============================================================ -->
+        <h2><i class="fas fa-tools"></i> Tools &amp; Technologies</h2>
+        <div class="tech-stack">
+            <span class="tech-item"><i class="fab fa-python"></i><span>Python</span></span>
+            <span class="tech-item"><i class="fas fa-table"></i><span>Pandas / NumPy</span></span>
+            <span class="tech-item"><i class="fas fa-chart-pie"></i><span>Matplotlib / Seaborn</span></span>
+            <span class="tech-item"><i class="fas fa-map-location-dot"></i><span>Folium / Geopandas</span></span>
+            <span class="tech-item"><i class="fas fa-robot"></i><span>Scikit-learn / XGBoost</span></span>
+            <span class="tech-item"><i class="fas fa-microchip"></i><span>TensorFlow / PyTorch</span></span>
+            <span class="tech-item"><i class="fas fa-code-branch"></i><span>Git / GitHub</span></span>
+            <span class="tech-item"><i class="fas fa-chart-simple"></i><span>Power BI / Tableau</span></span>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 5. WORKFLOW -->
+        <!-- ============================================================ -->
+        <h2><i class="fas fa-diagram-project"></i> Proposed Workflow</h2>
+
+        <!-- Mermaid placeholder -->
+        <div class="mermaid-box">
+            <span class="mermaid-icon"><i class="fas fa-code"></i></span>
+            <p style="font-weight:600; color:#e8edf5;">Workflow Diagram — Mermaid.js</p>
+            <code>Interactive Mermaid diagram will be embedded here</code>
+            <p class="hint">
+                <i class="fas fa-arrow-right"></i> View and edit directly on <strong>mermaid.live</strong>
+            </p>
+        </div>
+
+        <!-- Workflow summary -->
+        <div class="workflow-summary">
+            <p>
+                <span><i class="fas fa-download"></i> Data Collection</span>
+                <span><i class="fas fa-broom"></i> Cleaning &amp; Preprocessing</span>
+                <span><i class="fas fa-magnifying-glass-chart"></i> Exploratory Analysis</span>
+                <span><i class="fas fa-route"></i> Pathway Selection</span>
+                <span><i class="fas fa-tree"></i> Rule Mining</span>
+                <span><i class="fas fa-cloud"></i> Classification</span>
+                <span><i class="fas fa-location-dot"></i> Spatial Prediction</span>
+                <span><i class="fas fa-gauge-high"></i> Evaluation</span>
+                <span><i class="fas fa-grip"></i> Dashboard</span>
+                <span><i class="fas fa-file-pdf"></i> Final Report</span>
+            </p>
+        </div>
+
+        <!-- Detailed workflow table -->
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Phase</th><th>Steps</th><th>Tools</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>Data Collection</strong></td><td>Extract Egypt data from GTD</td><td>CSV, Pandas</td></tr>
+                    <tr><td><strong>Preprocessing</strong></td><td>Handle missing values, encode variables, balance data</td><td>Scikit-learn, SMOTE</td></tr>
+                    <tr><td><strong>EDA</strong></td><td>Time series analysis, heatmaps, geographic distribution</td><td>Se
