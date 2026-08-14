@@ -9,9 +9,16 @@ const CHROME_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit
 
 function isAuthUrl(url) {
     if (!url) return false;
-    return url.includes('accounts.google.com') ||
-           url.includes('appleid.apple.com') ||
-           url.includes('google.com/o/oauth2');
+    const lowerUrl = url.toLowerCase();
+    return lowerUrl.includes('accounts.google.com') ||
+           lowerUrl.includes('appleid.apple.com') ||
+           lowerUrl.includes('google.com/o/oauth2') ||
+           lowerUrl.includes('google.com/gsi/') ||
+           lowerUrl.includes('login.live.com') ||
+           lowerUrl.includes('login.microsoftonline.com') ||
+           lowerUrl.includes('github.com/login') ||
+           lowerUrl.includes('provider=google') ||
+           lowerUrl.includes('provider=apple');
 }
 
 function openAuthPopupWindow(authUrl) {
@@ -21,14 +28,14 @@ function openAuthPopupWindow(authUrl) {
     }
 
     authWindowInstance = new BrowserWindow({
-        width: 520,
-        height: 680,
+        width: 540,
+        height: 720,
         center: true,
         parent: mainWindow,
         modal: false,
         icon: path.join(__dirname, 'deepseek-logo.png'),
         autoHideMenuBar: true,
-        title: 'Sign in with Google - DeepSeek',
+        title: 'Sign in - DeepSeek Desktop',
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
@@ -40,50 +47,142 @@ function openAuthPopupWindow(authUrl) {
     authWindowInstance.loadURL(authUrl);
 
     let isDone = false;
-    const handleAuthRedirect = (navUrl) => {
+    const handleAuthRedirect = async (navUrl) => {
         if (isDone) return;
-        if (navUrl && navUrl.includes('deepseek.com') && !isAuthUrl(navUrl)) {
+
+        const isDeepSeekMain = navUrl && navUrl.includes('deepseek.com') &&
+                               !isAuthUrl(navUrl) &&
+                               !navUrl.includes('sign_in') &&
+                               !navUrl.includes('/auth/');
+
+        if (isDeepSeekMain) {
             isDone = true;
 
-            setTimeout(async () => {
+            // Hide popup immediately so user never sees chat loading inside popup window
+            if (authWindowInstance && !authWindowInstance.isDestroyed()) {
                 try {
-                    await session.defaultSession.cookies.flushStore();
+                    authWindowInstance.hide();
                 } catch (e) {}
+            }
 
-                try {
-                    if (authWindowInstance && !authWindowInstance.isDestroyed()) {
-                        authWindowInstance.close();
-                    }
-                } catch (e) {}
+            try {
+                let localStorageData = {};
+                if (authWindowInstance && !authWindowInstance.isDestroyed()) {
+                    localStorageData = await authWindowInstance.webContents.executeJavaScript(`
+                        (() => {
+                            const data = {};
+                            for (let i = 0; i < localStorage.length; i++) {
+                                const key = localStorage.key(i);
+                                data[key] = localStorage.getItem(key);
+                            }
+                            return data;
+                        })()
+                    `).catch(() => ({}));
+                }
+
+                await session.defaultSession.cookies.flushStore();
+
+                if (authWindowInstance && !authWindowInstance.isDestroyed()) {
+                    authWindowInstance.close();
+                }
 
                 if (mainWindow && !mainWindow.isDestroyed()) {
+                    if (localStorageData && Object.keys(localStorageData).length > 0) {
+                        await mainWindow.webContents.executeJavaScript(`
+                            (() => {
+                                const data = ${JSON.stringify(localStorageData)};
+                                Object.keys(data).forEach(key => {
+                                    if (data[key] !== null) {
+                                        localStorage.setItem(key, data[key]);
+                                    }
+                                });
+                            })()
+                        `).catch(() => {});
+                    }
+                    mainWindow.show();
+                    mainWindow.focus();
                     mainWindow.loadURL('https://chat.deepseek.com/');
                 }
-            }, 1200);
+            } catch (e) {
+                console.error('Failed to sync auth state:', e);
+                if (mainWindow && !mainWindow.isDestroyed()) {
+                    mainWindow.show();
+                    mainWindow.focus();
+                    mainWindow.loadURL('https://chat.deepseek.com/');
+                }
+            }
         }
     };
 
+    let checkAuthInterval = setInterval(async () => {
+        if (isDone || !authWindowInstance || authWindowInstance.isDestroyed()) {
+            clearInterval(checkAuthInterval);
+            return;
+        }
+        try {
+            const checkResult = await authWindowInstance.webContents.executeJavaScript(`
+                (() => {
+                    const href = window.location.href;
+                    let hasAuth = false;
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const k = (localStorage.key(i) || '').toLowerCase();
+                        if (k.includes('token') || k.includes('user') || k.includes('auth') || k.includes('hsso')) {
+                            hasAuth = true;
+                            break;
+                        }
+                    }
+                    if (document.cookie.includes('HSSO_TOKEN') || document.cookie.includes('user_token')) {
+                        hasAuth = true;
+                    }
+                    const isMainPage = href.includes('deepseek.com') && !href.includes('sign_in') && !href.includes('/auth') && !href.includes('google.com') && !href.includes('appleid');
+                    return { hasAuth, isMainPage, href };
+                })()
+            `).catch(() => null);
+
+            if (checkResult && (checkResult.hasAuth || checkResult.isMainPage)) {
+                clearInterval(checkAuthInterval);
+                handleAuthRedirect(checkResult.href);
+            }
+        } catch (e) {}
+    }, 300);
+
+    authWindowInstance.webContents.on('did-navigate-in-page', (event, navUrl) => {
+        handleAuthRedirect(navUrl);
+    });
+
+    authWindowInstance.webContents.on('will-redirect', (event, navUrl) => {
+        handleAuthRedirect(navUrl);
+    });
+
+    authWindowInstance.webContents.on('will-navigate', (event, navUrl) => {
+        handleAuthRedirect(navUrl);
+    });
+
     authWindowInstance.webContents.on('did-finish-load', () => {
         const currentUrl = authWindowInstance.webContents.getURL();
-        if (currentUrl.includes('deepseek.com') && !isAuthUrl(currentUrl)) {
-            handleAuthRedirect(currentUrl);
-        }
+        handleAuthRedirect(currentUrl);
     });
 
     authWindowInstance.webContents.on('did-navigate', (event, navUrl) => {
-        if (navUrl.includes('deepseek.com') && !isAuthUrl(navUrl)) {
-            handleAuthRedirect(navUrl);
-        }
+        handleAuthRedirect(navUrl);
     });
 
-    authWindowInstance.on('closed', () => {
+    authWindowInstance.webContents.on('did-redirect-navigation', (event, navUrl) => {
+        handleAuthRedirect(navUrl);
+    });
+
+    authWindowInstance.on('closed', async () => {
+        if (checkAuthInterval) clearInterval(checkAuthInterval);
         authWindowInstance = null;
         if (mainWindow && !mainWindow.isDestroyed()) {
+            try {
+                await session.defaultSession.cookies.flushStore();
+            } catch (e) {}
             const currentUrl = mainWindow.webContents.getURL();
-            if (isAuthUrl(currentUrl)) {
+            if (isAuthUrl(currentUrl) || currentUrl.includes('sign_in')) {
+                mainWindow.show();
+                mainWindow.focus();
                 mainWindow.loadURL('https://chat.deepseek.com/');
-            } else {
-                mainWindow.reload();
             }
         }
     });
@@ -119,6 +218,13 @@ function createTray() {
                     mainWindow.focus();
                     mainWindow.loadURL('https://chat.deepseek.com/');
                 }
+            }
+        },
+        { type: 'separator' },
+        {
+            label: '⚡ Developed by Senior A.',
+            click: () => {
+                shell.openExternal('https://senior-flax.vercel.app/');
             }
         },
         { type: 'separator' },
@@ -230,24 +336,19 @@ function createMainWindow() {
         }
     });
 
-    // Handle OAuth popup windows (Google / Apple / DeepSeek Auth) via managed auth popup
+    // Handle OAuth popup windows (Google / Apple / Microsoft / GitHub) via managed auth popup
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-        const isAuthUrl = url.includes('accounts.google.com') ||
-                          url.includes('appleid.apple.com') ||
-                          url.includes('google.com/o/oauth2') ||
-                          url.includes('auth');
-
-        if (isAuthUrl) {
+        if (isAuthUrl(url)) {
             openAuthPopupWindow(url);
             return { action: 'deny' };
         }
 
-        if (url && url.startsWith('http')) {
+        if (url && url.startsWith('http') && !url.includes('deepseek.com')) {
             shell.openExternal(url);
+            return { action: 'deny' };
         }
-        return { action: 'deny' };
+        return { action: 'allow' };
     });
-
 
     mainWindow.webContents.on('will-navigate', (event, url) => {
         if (isAuthUrl(url)) {
@@ -256,7 +357,7 @@ function createMainWindow() {
             return;
         }
 
-        if (url && !url.includes('deepseek.com')) {
+        if (url && url.startsWith('http') && !url.includes('deepseek.com')) {
             event.preventDefault();
             shell.openExternal(url);
         }
@@ -266,18 +367,6 @@ function createMainWindow() {
         if (isAuthUrl(url)) {
             event.preventDefault();
             openAuthPopupWindow(url);
-            if (mainWindow && !mainWindow.isDestroyed()) {
-                mainWindow.loadURL('https://chat.deepseek.com/');
-            }
-        }
-    });
-
-    mainWindow.webContents.on('did-navigate', (event, url) => {
-        if (isAuthUrl(url)) {
-            openAuthPopupWindow(url);
-            if (mainWindow && !mainWindow.isDestroyed()) {
-                mainWindow.loadURL('https://chat.deepseek.com/');
-            }
         }
     });
 
@@ -303,11 +392,7 @@ ipcMain.on('open-external-url', (event, url) => {
 
 
 app.on('ready', () => {
-    session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
-        details.requestHeaders['User-Agent'] = CHROME_USER_AGENT;
-        callback({ cancel: false, requestHeaders: details.requestHeaders });
-    });
-
+    app.userAgentFallback = CHROME_USER_AGENT;
     createMainWindow();
 });
 
