@@ -368,10 +368,10 @@ function createMainWindow() {
         }
     });
 
-    // Handle OAuth popup windows (Google / Apple / Microsoft / GitHub) via managed auth popup
+    // Handle OAuth popup windows via system default browser (Google OAuth Security Compliance)
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
         if (isAuthUrl(url)) {
-            openAuthPopupWindow(url);
+            shell.openExternal(url);
             return { action: 'deny' };
         }
 
@@ -385,7 +385,7 @@ function createMainWindow() {
     mainWindow.webContents.on('will-navigate', (event, url) => {
         if (isAuthUrl(url)) {
             event.preventDefault();
-            openAuthPopupWindow(url);
+            shell.openExternal(url);
             return;
         }
 
@@ -398,7 +398,7 @@ function createMainWindow() {
     mainWindow.webContents.on('will-redirect', (event, url) => {
         if (isAuthUrl(url)) {
             event.preventDefault();
-            openAuthPopupWindow(url);
+            shell.openExternal(url);
         }
     });
 
